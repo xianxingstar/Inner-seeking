@@ -99,13 +99,18 @@ export default async function handler(req: any, res: any) {
       typeof (item as { content?: unknown }).content === "string")
     .map((item: { role: "user" | "assistant"; content: string }) => ({ role: item.role, content: item.content.slice(0, 4000) }));
 
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 8000);
+
   try {
     const response = await fetch("https://api.deepseek.com/chat/completions", {
       method: "POST",
       headers: { "Content-Type": "application/json", Authorization: `Bearer ${apiKey}` },
+      signal: controller.signal,
       body: JSON.stringify({
         model: "deepseek-chat",
         temperature: 0.3,
+        max_tokens: 700,
         response_format: { type: "json_object" },
         messages: [
           { role: "system", content: SYSTEM_PROMPT },
@@ -127,5 +132,7 @@ export default async function handler(req: any, res: any) {
   } catch (error: any) {
     console.error("DeepSeek request failed:", error?.message ?? error);
     return res.status(200).json(demoResponse(stage, userMessage, "真实模型暂时不可用，正在使用演示内容。"));
+  } finally {
+    clearTimeout(timeoutId);
   }
 }
