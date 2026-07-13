@@ -28,6 +28,7 @@ export async function callDeepSeekAPI(
         model: "deepseek-chat",
         messages: [
           { role: "system", content: SYSTEM_PROMPT },
+          { role: "system", content: `【当前对话阶段】${stage}。只执行这个阶段的任务，不要提前进入下一阶段。` },
           ...history
         ],
         response_format: { type: "json_object" },
