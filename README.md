@@ -47,29 +47,11 @@ npm run dev
 
 ## ☁️ 部署到 Vercel 的步骤
 
-由于本项目采用了 Express.js 代理解析 API，在 Vercel 部署时可以通过 **Vercel Serverless Functions** (或将接口改造为 `api/chat.ts` 形式的 Serverless 函数) 来进行托管。
+项目使用 Vite 构建前端，并通过 `api/chat.ts` 作为 Vercel Serverless Function 调用 DeepSeek。无需运行 Express 服务器。
 
-### 方式 A：标准 Vercel JSON 全栈托管
-1. **安装 Vercel CLI** (若尚未安装)：
-   ```bash
-   npm i -g vercel
-   ```
-2. **在项目根目录下创建 `vercel.json` 配置文件**：
-   ```json
-   {
-     "version": 2,
-     "builds": [
-       { "src": "server.ts", "use": "@vercel/node" },
-       { "src": "package.json", "use": "@vercel/static-build", "config": { "distDir": "dist" } }
-     ],
-     "routes": [
-       { "src": "/api/(.*)", "dest": "server.ts" },
-       { "src": "/assets/(.*)", "dest": "/assets/$1" },
-       { "src": "/(.*)", "dest": "/index.html" }
-     ]
-   }
-   ```
-3. **部署至 Vercel**：
-   在根目录下执行 `vercel`，并按照终端提示绑定项目。
-4. **添加环境变量**：
-   在 Vercel 控制台的项目设置 (Settings -> Environment Variables) 中，添加名为 `DEEPSEEK_API_KEY` 的变量，值为你的真实 DeepSeek 密钥，并重新触发部署 (Redeploy) 即可。
+1. 将仓库导入 Vercel，Framework Preset 选择 `Vite`。
+2. 保持 Build Command 为 `npm run build`，Output Directory 为 `dist`。
+3. 在 Vercel 项目 Settings -> Environment Variables 添加 `DEEPSEEK_API_KEY`，值为真实 DeepSeek 密钥。
+4. 重新部署后，`/api/chat` 会从服务端调用 DeepSeek；密钥不会发送到浏览器。
+
+首次测试建议仅分享给少量同学，并在 DeepSeek 控制台设置额度提醒。未配置密钥时，页面会显示“演示模式”，不应将演示内容当作真实分析结果。
