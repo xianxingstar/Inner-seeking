@@ -1,0 +1,6 @@
+{
+  "name": "清醒行动",
+  "description": "面向大学生的自我澄清工具。帮助你从一件具体的迷茫或拖延事件出发，分清事实、解释、现实限制和可行动部分，并设计一个两周内完成的小实验。",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
