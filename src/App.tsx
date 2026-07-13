@@ -110,11 +110,13 @@ export default function App() {
       topic: selectedTopic || "other",
       topicDescription,
       specificEvent,
-      facts: step3Response?.facts || step2Response?.facts || ["用户记录了具体困扰事件"],
-      interpretations: step3Response?.interpretations || step2Response?.interpretations || ["存在主观上的评判或焦虑担忧"],
+      // The first reflection is the source of truth for the user's event.
+      // Later stages may add analysis, but must not replace the original facts.
+      facts: step2Response?.facts ?? [],
+      interpretations: step2Response?.interpretations ?? [],
       constraints: constraintsList,
       designable_parts: designablesList,
-      hypothesis: hypothesisText || "我正在开展低成本真实环境探索以获取行动反馈。",
+      hypothesis: hypothesisText,
       experiment: {
         action: expAction,
         realWorldContext: expContext,
@@ -241,7 +243,7 @@ export default function App() {
       <footer className="w-full max-w-[720px] mx-auto px-4 py-8 mt-12 border-t border-gray-100 flex flex-col sm:flex-row justify-between items-center gap-4 text-xs text-gray-400">
         <div className="flex items-center gap-1.5 leading-none">
           <Shield size={13} className="text-gray-300" />
-          <span>本地隐私已隔离：绝不在服务器记录任何个人痕迹</span>
+          <span>不在服务器持久化保存内容；行动卡仅保存在当前浏览器</span>
         </div>
         
         <div className="flex items-center gap-4">
