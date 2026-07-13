@@ -43,4 +43,3 @@ export default async function handler(req: any, res: any) {
     _warning: apiResult.error ?? "未配置 DEEPSEEK_API_KEY，正在使用演示内容。",
   });
 }
-新增 Vercel DeepSeek API 接口
